@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package model.dao.impl;
 
 import java.sql.*;
@@ -63,7 +60,27 @@ public class SellerDaoJDBC implements SellerDao {
 
     @Override
     public void update(Seller obj) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        PreparedStatement ps = null;
+        try {
+            ps = conn.prepareStatement("UPDATE seller SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? WHERE Id = ?",Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, obj.getName());
+            ps.setString(2, obj.getEmail()); 
+            ps.setDate(3, new java.sql.Date(obj.getBirthDate().getTime())); 
+            ps.setDouble(4, obj.getBaseSalary());
+            ps.setInt(5, obj.getDepartment().getId());
+            ps.setInt(6, obj.getId());
+            
+            ps.executeUpdate();
+            
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }finally{
+            try {
+                ps.close();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex.getMessage());
+            }
+        }
     }
 
     @Override
